@@ -1,304 +1,134 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-  Sparkles,
-  Download,
-  CheckCircle2,
-  Zap,
-  RotateCcw,
-  Film,
-  Layers,
-  Activity,
-  Scissors,
-  Eye,
-  SlidersHorizontal,
-} from "lucide-react";
-
-interface PresetItem {
-  id: string;
-  name: string;
-  url: string;
-  platform: string;
-  badgeColor: string;
-  sampleTitle: string;
-  sampleSize: string;
-  sampleDuration: string;
-  sampleSpeed: string;
-}
-
-const PRESETS: PresetItem[] = [
-  {
-    id: "yt",
-    name: "YouTube 4K HDR",
-    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    platform: "YouTube",
-    badgeColor: "bg-red-500/10 text-red-400 border-red-500/20",
-    sampleTitle: "Rick Astley - Never Gonna Give You Up (Official 4K Remaster)",
-    sampleSize: "142.8 MB",
-    sampleDuration: "3:32",
-    sampleSpeed: "64.2 MB/s",
-  },
-  {
-    id: "tiktok",
-    name: "TikTok HD",
-    url: "https://www.tiktok.com/@perfected.praise4/video/7675215846851022111",
-    platform: "TikTok",
-    badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    sampleTitle: "Yahweh (Refuge) — No Watermark HD",
-    sampleSize: "10.5 MB",
-    sampleDuration: "0:50",
-    sampleSpeed: "42.1 MB/s",
-  },
-  {
-    id: "bilibili",
-    name: "Bilibili 1080p60",
-    url: "https://www.bilibili.com/video/BV1xx411c7mD",
-    platform: "Bilibili",
-    badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    sampleTitle: "Genshin Impact Anime Cutscene [FLAC Audio]",
-    sampleSize: "89.4 MB",
-    sampleDuration: "2:15",
-    sampleSpeed: "55.8 MB/s",
-  },
-  {
-    id: "magnet",
-    name: "BitTorrent Swarm",
-    url: "magnet:?xt=urn:btih:ubuntu-24.04-desktop-amd64.iso",
-    platform: "Torrent",
-    badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    sampleTitle: "Ubuntu 24.04 LTS Desktop Image (ISO)",
-    sampleSize: "4.8 GB",
-    sampleDuration: "Torrent",
-    sampleSpeed: "92.4 MB/s",
-  },
-];
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import { Zap, Scissors, Activity, Play, RotateCcw, CheckCircle2, Film } from "lucide-react";
 
 export function AppShowcase() {
-  const [activeTab, setActiveTab] = useState<"screenshot" | "simulator">("screenshot");
-  const [selectedPreset, setSelectedPreset] = useState<PresetItem>(PRESETS[0]);
-  const [simProgress, setSimProgress] = useState(0);
-  const [isSimulating, setIsSimulating] = useState(false);
-  const [threads, setThreads] = useState<number[]>(new Array(16).fill(0));
-
-  // Run simulated 16-thread Aria2 download progress
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isSimulating) {
-      interval = setInterval(() => {
-        setSimProgress((prev) => {
-          if (prev >= 100) {
-            setIsSimulating(false);
-            return 100;
-          }
-          const increment = Math.random() * 8 + 4;
-          setThreads((old) => old.map(() => Math.floor(Math.random() * 100)));
-          return Math.min(100, prev + increment);
-        });
-      }, 200);
-    }
-    return () => clearInterval(interval);
-  }, [isSimulating]);
-
-  const handleStartSim = (preset: PresetItem) => {
-    setSelectedPreset(preset);
-    setSimProgress(0);
-    setIsSimulating(true);
-  };
+  const [showSim, setShowSim] = useState(false);
+  const [progress, setProgress] = useState(74);
 
   return (
-    <section id="showcase" className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-8">
-      {/* Section Header */}
-      <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Crafted for desktop mastery.
-        </h2>
-        <p className="text-sm sm:text-base text-zinc-400">
-          Clean, distraction-free native UI with intelligent stream parsing and multi-connection acceleration.
-        </p>
+    <section className="relative px-6 max-w-6xl mx-auto pt-4 pb-24">
+      {/* Ambient Radial Spotlight */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-gradient-to-tr from-cyan-500/15 via-blue-600/10 to-transparent blur-[140px] pointer-events-none -z-10" />
 
-        {/* Tab Switcher */}
-        <div className="pt-4 flex items-center justify-center">
-          <div className="inline-flex p-1 rounded-2xl bg-zinc-900/90 border border-zinc-800 backdrop-blur-xl shadow-lg">
-            <button
-              type="button"
-              onClick={() => setActiveTab("screenshot")}
-              className={`px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-                activeTab === "screenshot"
-                  ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-md shadow-cyan-900/30"
-                  : "text-zinc-400 hover:text-zinc-200"
-              }`}
-            >
-              <Eye className="w-3.5 h-3.5" />
-              <span>Native Interface</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab("simulator");
-                if (simProgress === 0 && !isSimulating) handleStartSim(selectedPreset);
-              }}
-              className={`px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-                activeTab === "simulator"
-                  ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-md shadow-cyan-900/30"
-                  : "text-zinc-400 hover:text-zinc-200"
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>16x Speed Simulator</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Showcase Area */}
-      {activeTab === "screenshot" ? (
-        /* Native App Screenshot with clean frame and NO duplicate window chrome */
-        <div className="relative group">
-          {/* Subtle Ambient Radial Glow behind the screenshot */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 via-blue-600/10 to-transparent blur-3xl opacity-50 -z-10 group-hover:opacity-75 transition-opacity duration-500" />
-
-          <div className="relative rounded-3xl border border-zinc-800/80 bg-zinc-950/60 p-2 sm:p-3 backdrop-blur-2xl shadow-2xl shadow-black/80">
+      {/* Main Elevated Display Chassis */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="relative rounded-3xl border border-white/[0.08] bg-zinc-950/80 p-2 sm:p-3 shadow-2xl shadow-black/90 backdrop-blur-2xl"
+      >
+        {!showSim ? (
+          /* High-Definition Native App View */
+          <div className="relative rounded-2xl overflow-hidden group">
             <img
               src="/screenshot1.png"
               alt="Downlink Desktop Application Interface"
-              className="w-full h-auto object-cover rounded-2xl shadow-inner"
+              className="w-full h-auto object-cover rounded-2xl"
             />
-          </div>
 
-          {/* Screenshot Capability Badges */}
-          <div className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-xl flex items-start gap-3">
-              <div className="p-2 rounded-xl bg-blue-500/10 text-cyan-400 flex-shrink-0">
-                <Zap className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="text-xs font-bold text-white">1-Click Auto Extraction</div>
-                <div className="text-[11px] text-zinc-400">Instantly identifies video resolution, bitrate, and subtitles.</div>
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-xl flex items-start gap-3">
-              <div className="p-2 rounded-xl bg-violet-500/10 text-violet-400 flex-shrink-0">
-                <Scissors className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="text-xs font-bold text-white">SponsorBlock Removal</div>
-                <div className="text-[11px] text-zinc-400">Automatically bypasses sponsors, self-promo, and intros.</div>
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-xl flex items-start gap-3">
-              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 flex-shrink-0">
-                <Activity className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="text-xs font-bold text-white">Live Speed Telemetry</div>
-                <div className="text-[11px] text-zinc-400">Real-time ETA, transfer rate, and download progress.</div>
-              </div>
+            {/* Quick Interactive Simulator Trigger Pill */}
+            <div className="absolute bottom-4 right-4">
+              <button
+                type="button"
+                onClick={() => setShowSim(true)}
+                className="px-4 py-2 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.1] text-xs font-semibold text-white shadow-xl backdrop-blur-xl flex items-center gap-2 active:scale-95 transition-all"
+              >
+                <Zap className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Simulate 16x Download</span>
+              </button>
             </div>
           </div>
-        </div>
-      ) : (
-        /* Live Interactive Engine Simulator */
-        <div className="rounded-3xl bg-zinc-900/90 border border-zinc-800 p-6 sm:p-8 space-y-6 shadow-2xl shadow-black/80 backdrop-blur-2xl text-left">
-          {/* Presets Row */}
-          <div className="space-y-2">
-            <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-              Select a Test URL to Simulate:
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {PRESETS.map((preset) => (
-                <button
-                  key={preset.id}
-                  type="button"
-                  onClick={() => handleStartSim(preset)}
-                  className={`p-3 rounded-xl border text-left transition-all ${
-                    selectedPreset.id === preset.id
-                      ? "bg-cyan-500/10 border-cyan-500/50 text-white shadow-md shadow-cyan-900/20"
-                      : "bg-zinc-900/70 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold">{preset.name}</span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded border font-mono ${preset.badgeColor}`}>
-                      {preset.platform}
-                    </span>
-                  </div>
-                  <div className="text-[10px] text-zinc-500 font-mono truncate mt-1">{preset.url}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Active Download Progress Card */}
-          <div className="p-5 rounded-2xl bg-zinc-950/80 border border-zinc-800/90 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        ) : (
+          /* Live 16x Stream Acceleration Visualizer */
+          <div className="p-8 space-y-6 text-left rounded-2xl bg-zinc-950/90">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-cyan-400">
                   <Film className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-white">{selectedPreset.sampleTitle}</div>
-                  <div className="text-xs text-zinc-400 flex items-center gap-3">
-                    <span>Size: {selectedPreset.sampleSize}</span>
-                    <span>•</span>
-                    <span>Format: MP4 (H.264 + AAC)</span>
-                    <span>•</span>
-                    <span className="text-cyan-400 font-mono font-bold">Speed: {selectedPreset.sampleSpeed}</span>
-                  </div>
+                  <div className="text-sm font-bold text-white">Rick Astley - Never Gonna Give You Up (4K HDR)</div>
+                  <div className="text-xs text-zinc-400 font-mono">142.8 MB • 16 Aria2 Concurrent Streams • 64.2 MB/s</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleStartSim(selectedPreset)}
-                  className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-200 flex items-center gap-1.5 transition-colors"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Re-Run</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setShowSim(false)}
+                className="px-3.5 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-xs font-semibold text-zinc-300 transition-colors"
+              >
+                View App Screenshot
+              </button>
             </div>
 
-            {/* Progress Meter */}
-            <div className="space-y-1.5">
+            {/* Progress bar */}
+            <div className="space-y-2">
               <div className="flex justify-between text-xs font-mono">
-                <span className="text-zinc-400 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                  {simProgress >= 100 ? "Post-Processing & Tag Embedding Complete" : "16-Chunk Aria2 Acceleration Active"}
-                </span>
-                <span className="text-cyan-400 font-bold">{Math.floor(simProgress)}%</span>
+                <span className="text-zinc-400">Aria2 Multi-Connection Chunking Active</span>
+                <span className="text-cyan-400 font-bold">{progress}%</span>
               </div>
-              <div className="w-full h-2.5 rounded-full bg-zinc-800 overflow-hidden">
+              <div className="w-full h-2 rounded-full bg-zinc-800 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 transition-all duration-200"
-                  style={{ width: `${simProgress}%` }}
+                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 transition-all duration-300"
+                  style={{ width: `${progress}%` }}
                 />
               </div>
             </div>
 
-            {/* 16 Parallel Aria2 Thread Visualization */}
-            <div className="pt-2 space-y-1.5">
-              <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
-                <span>16x Concurrent TCP Streams</span>
-                <span>Saturating Maximum Bandwidth</span>
-              </div>
+            {/* 16 Concurrent Segment Streams */}
+            <div className="space-y-1.5 pt-2">
+              <div className="text-[11px] font-mono text-zinc-500">16 Parallel TCP Segment Buffers</div>
               <div className="grid grid-cols-8 sm:grid-cols-16 gap-1">
-                {threads.map((val, idx) => (
-                  <div key={idx} className="h-4 rounded bg-zinc-800/80 overflow-hidden flex flex-col justify-end">
+                {Array.from({ length: 16 }).map((_, i) => (
+                  <div key={i} className="h-6 rounded bg-zinc-900 border border-white/[0.04] overflow-hidden flex flex-col justify-end">
                     <div
-                      className="bg-cyan-500/80 transition-all duration-300"
-                      style={{ height: simProgress >= 100 ? "100%" : `${val}%` }}
+                      className="bg-cyan-500/80 transition-all"
+                      style={{ height: `${Math.min(100, Math.floor((i + 1) * 6.5))}%` }}
                     />
                   </div>
                 ))}
               </div>
             </div>
           </div>
+        )}
+      </motion.div>
+
+      {/* Feature Pillar Badges below screenshot */}
+      <div className="pt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-xl space-y-1 hover:border-white/[0.12] transition-colors">
+          <div className="text-xs font-bold text-white flex items-center gap-2">
+            <Zap className="w-3.5 h-3.5 text-cyan-400" />
+            <span>1-Click Format Extraction</span>
+          </div>
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            Auto-detects 4K/8K resolutions, high-bitrate video containers, and audio-only streams.
+          </p>
         </div>
-      )}
+
+        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-xl space-y-1 hover:border-white/[0.12] transition-colors">
+          <div className="text-xs font-bold text-white flex items-center gap-2">
+            <Scissors className="w-3.5 h-3.5 text-violet-400" />
+            <span>SponsorBlock Auto-Cut</span>
+          </div>
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            Automatically skips sponsorships, intros, and outro cards for clean uninterrupted offline viewing.
+          </p>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-xl space-y-1 hover:border-white/[0.12] transition-colors">
+          <div className="text-xs font-bold text-white flex items-center gap-2">
+            <Activity className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Live Transfer Telemetry</span>
+          </div>
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            Instant feedback on per-fragment transfer speed, precise time remaining, and completion status.
+          </p>
+        </div>
+      </div>
     </section>
   );
 }

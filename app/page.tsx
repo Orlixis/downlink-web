@@ -85,7 +85,7 @@ export default function LandingPage() {
         <HeroSection
           detectedOs={detectedOs}
           releaseInfo={releaseInfo}
-          onSelectOs={setDetectedOs}
+          
         />
 
         <AppShowcase />

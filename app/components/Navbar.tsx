@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Smartphone, ExternalLink, Menu, X, Github, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Smartphone, Download, Github, Menu, X } from "lucide-react";
 
 interface NavbarProps {
   version: string;
@@ -13,148 +14,141 @@ export function Navbar({ version, githubUrl }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-2xl bg-[#09090b]/80 border-b border-zinc-800/60 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#09090b]/75 border-b border-white/[0.06] transition-all">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 group">
           <img
             src="/downlink-square.png"
-            alt="Downlink Logo"
-            className="w-8 h-8 rounded-xl shadow-md shadow-cyan-500/20 group-hover:scale-105 group-hover:shadow-cyan-500/40 transition-all"
+            alt="Downlink"
+            className="w-7 h-7 rounded-lg shadow-sm group-hover:scale-105 transition-transform"
           />
           <div className="flex items-center gap-2">
-            <span className="font-extrabold tracking-tight text-lg text-white group-hover:text-cyan-200 transition-colors">
+            <span className="font-bold text-sm tracking-tight text-white group-hover:text-cyan-300 transition-colors">
               Downlink
             </span>
-            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-zinc-900/90 text-cyan-400 border border-cyan-500/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-white/[0.04] text-zinc-400 border border-white/[0.08]">
               {version}
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-400">
-          <a href="#features" className="hover:text-white transition-colors">
+        <nav className="hidden md:flex items-center gap-8 text-[13px] font-medium text-zinc-400">
+          <a href="#features" className="hover:text-zinc-100 transition-colors">
             Features
           </a>
-          <a href="#showcase" className="hover:text-white transition-colors">
-            Interactive Demo
+          <a href="#continuity" className="hover:text-zinc-100 transition-colors">
+            Continuity
           </a>
-          <a href="#continuity" className="hover:text-white transition-colors">
-            Cloud Continuity
+          <a href="#compare" className="hover:text-zinc-100 transition-colors">
+            Comparison
           </a>
-          <a href="#downloads" className="hover:text-white transition-colors">
+          <a href="#downloads" className="hover:text-zinc-100 transition-colors">
             Downloads
           </a>
-          <a href="#faq" className="hover:text-white transition-colors">
+          <a href="#faq" className="hover:text-zinc-100 transition-colors">
             FAQ
           </a>
-          <Link
-            href="/mobile"
-            className="hover:text-cyan-300 flex items-center gap-1.5 text-zinc-300 transition-colors"
-          >
-            <Smartphone className="w-4 h-4 text-cyan-400" />
-            <span>Companion PWA</span>
-          </Link>
         </nav>
 
-        {/* Desktop Action Buttons */}
+        {/* Right CTA Actions */}
         <div className="hidden sm:flex items-center gap-3">
           <Link
             href="/mobile"
-            className="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 active:scale-95 text-xs font-semibold flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-xl text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors flex items-center gap-1.5"
           >
-            <Smartphone className="w-3.5 h-3.5" />
-            <span>Launch PWA</span>
+            <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Mobile Web</span>
           </Link>
+
           <a
             href={githubUrl}
             target="_blank"
             rel="noreferrer"
-            className="px-3.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 active:scale-95 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+            className="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-xs font-medium text-zinc-200 hover:text-white transition-all flex items-center gap-1.5"
           >
-            <Github className="w-3.5 h-3.5 text-zinc-400" />
-            <span>Star on GitHub</span>
-            <ExternalLink className="w-3 h-3 opacity-60" />
+            <Github className="w-3.5 h-3.5" />
+            <span>GitHub</span>
+          </a>
+
+          <a
+            href="#downloads"
+            className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-xs font-semibold text-white shadow-sm shadow-cyan-900/20 active:scale-95 transition-all flex items-center gap-1.5"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Download</span>
           </a>
         </div>
 
-        {/* Mobile Hamburger Toggle */}
+        {/* Mobile Menu Button */}
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white focus:outline-none"
-          aria-label="Toggle Navigation Menu"
+          className="md:hidden p-2 rounded-lg text-zinc-400 hover:text-white"
+          aria-label="Toggle Menu"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div className="md:hidden px-4 pt-3 pb-6 border-b border-zinc-800 bg-[#09090b]/95 backdrop-blur-2xl space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-          <nav className="flex flex-col space-y-3 text-sm font-medium text-zinc-300">
-            <a
-              href="#features"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-zinc-800/60 transition-colors"
-            >
-              Features
-            </a>
-            <a
-              href="#showcase"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-zinc-800/60 transition-colors"
-            >
-              Interactive Demo
-            </a>
-            <a
-              href="#continuity"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-zinc-800/60 transition-colors"
-            >
-              Cloud Continuity
-            </a>
-            <a
-              href="#downloads"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-zinc-800/60 transition-colors"
-            >
-              Downloads
-            </a>
-            <a
-              href="#faq"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-zinc-800/60 transition-colors"
-            >
-              FAQ
-            </a>
-            <Link
-              href="/mobile"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 flex items-center justify-between"
-            >
-              <span className="flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-cyan-400" />
-                Mobile Companion PWA
-              </span>
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            </Link>
-          </nav>
-          <div className="pt-2 flex flex-col gap-2">
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="w-full py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-center text-xs font-semibold text-zinc-200 flex items-center justify-center gap-2"
-            >
-              <Github className="w-4 h-4" />
-              <span>View Source on GitHub</span>
-            </a>
-          </div>
-        </div>
-      )}
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden border-b border-white/[0.06] bg-[#09090b]/95 backdrop-blur-2xl px-6 py-4 space-y-3"
+          >
+            <nav className="flex flex-col space-y-2 text-sm text-zinc-300">
+              <a
+                href="#features"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 hover:text-white transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#continuity"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 hover:text-white transition-colors"
+              >
+                Continuity
+              </a>
+              <a
+                href="#compare"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 hover:text-white transition-colors"
+              >
+                Comparison
+              </a>
+              <a
+                href="#downloads"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 hover:text-white transition-colors"
+              >
+                Downloads
+              </a>
+              <a
+                href="#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 hover:text-white transition-colors"
+              >
+                FAQ
+              </a>
+              <Link
+                href="/mobile"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 text-cyan-400 flex items-center gap-2"
+              >
+                <Smartphone className="w-4 h-4" />
+                <span>Launch Mobile Companion</span>
+              </Link>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
