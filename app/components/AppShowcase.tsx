@@ -6,15 +6,13 @@ import {
   Download,
   CheckCircle2,
   Zap,
-  Play,
   RotateCcw,
   Film,
   Layers,
   Activity,
-  FileCheck,
   Scissors,
-  Sliders,
-  ExternalLink,
+  Eye,
+  SlidersHorizontal,
 } from "lucide-react";
 
 interface PresetItem {
@@ -94,7 +92,6 @@ export function AppShowcase() {
             return 100;
           }
           const increment = Math.random() * 8 + 4;
-          // Randomize thread activity
           setThreads((old) => old.map(() => Math.floor(Math.random() * 100)));
           return Math.min(100, prev + increment);
         });
@@ -117,22 +114,23 @@ export function AppShowcase() {
           Crafted for desktop mastery.
         </h2>
         <p className="text-sm sm:text-base text-zinc-400">
-          Explore the clean, high-performance interface or test the multi-connection engine live.
+          Clean, distraction-free native UI with intelligent stream parsing and multi-connection acceleration.
         </p>
 
         {/* Tab Switcher */}
         <div className="pt-4 flex items-center justify-center">
-          <div className="inline-flex p-1 rounded-2xl bg-zinc-900/90 border border-zinc-800 backdrop-blur-xl">
+          <div className="inline-flex p-1 rounded-2xl bg-zinc-900/90 border border-zinc-800 backdrop-blur-xl shadow-lg">
             <button
               type="button"
               onClick={() => setActiveTab("screenshot")}
-              className={`px-5 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 activeTab === "screenshot"
                   ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-md shadow-cyan-900/30"
                   : "text-zinc-400 hover:text-zinc-200"
               }`}
             >
-              Native Desktop App UI
+              <Eye className="w-3.5 h-3.5" />
+              <span>Native Interface</span>
             </button>
             <button
               type="button"
@@ -147,165 +145,160 @@ export function AppShowcase() {
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
-              Live Engine Simulator
+              <span>16x Speed Simulator</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Realistic macOS App Showcase Container */}
-      <div className="relative rounded-3xl bg-zinc-900/80 border border-zinc-800/90 shadow-2xl shadow-black/80 backdrop-blur-2xl overflow-hidden group">
-        {/* macOS Window Top Chrome */}
-        <div className="px-4 py-3 bg-zinc-950/70 border-b border-zinc-800/80 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-red-500/80 border border-red-600/40" />
-            <span className="w-3 h-3 rounded-full bg-yellow-500/80 border border-yellow-600/40" />
-            <span className="w-3 h-3 rounded-full bg-green-500/80 border border-green-600/40" />
+      {/* Main Showcase Area */}
+      {activeTab === "screenshot" ? (
+        /* Native App Screenshot with clean frame and NO duplicate window chrome */
+        <div className="relative group">
+          {/* Subtle Ambient Radial Glow behind the screenshot */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 via-blue-600/10 to-transparent blur-3xl opacity-50 -z-10 group-hover:opacity-75 transition-opacity duration-500" />
+
+          <div className="relative rounded-3xl border border-zinc-800/80 bg-zinc-950/60 p-2 sm:p-3 backdrop-blur-2xl shadow-2xl shadow-black/80">
+            <img
+              src="/screenshot1.png"
+              alt="Downlink Desktop Application Interface"
+              className="w-full h-auto object-cover rounded-2xl shadow-inner"
+            />
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-medium text-zinc-400">
-            <img src="/downlink-square.png" alt="Logo" className="w-4 h-4 rounded" />
-            <span>Downlink — {activeTab === "screenshot" ? "Production Interface" : "Aria2 Parallel Engine"}</span>
-          </div>
-
-          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
-            <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-cyan-400 font-semibold">16x Chunks</span>
-          </div>
-        </div>
-
-        {/* Viewport Content */}
-        {activeTab === "screenshot" ? (
-          <div className="relative p-2 sm:p-4 bg-zinc-950/90">
-            <div className="relative rounded-2xl overflow-hidden border border-zinc-800 shadow-inner">
-              <img
-                src="/screenshot1.png"
-                alt="Downlink Desktop Application Interface"
-                className="w-full h-auto object-cover rounded-2xl"
-              />
-
-              {/* Hotspot Floating Feature Callouts */}
-              <div className="hidden lg:block absolute top-6 left-6 p-3 rounded-xl bg-zinc-900/90 border border-zinc-700/80 backdrop-blur-xl shadow-xl text-left max-w-xs space-y-1">
-                <div className="flex items-center gap-2 text-xs font-bold text-cyan-400">
-                  <Zap className="w-3.5 h-3.5" />
-                  <span>Real-Time Stream Extraction</span>
-                </div>
-                <p className="text-[11px] text-zinc-400 leading-tight">
-                  Auto-detects 4K/8K resolutions, audio bitrates, and video containers.
-                </p>
+          {/* Screenshot Capability Badges */}
+          <div className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-xl flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-blue-500/10 text-cyan-400 flex-shrink-0">
+                <Zap className="w-4 h-4" />
               </div>
+              <div>
+                <div className="text-xs font-bold text-white">1-Click Auto Extraction</div>
+                <div className="text-[11px] text-zinc-400">Instantly identifies video resolution, bitrate, and subtitles.</div>
+              </div>
+            </div>
 
-              <div className="hidden lg:block absolute bottom-6 right-6 p-3 rounded-xl bg-zinc-900/90 border border-zinc-700/80 backdrop-blur-xl shadow-xl text-left max-w-xs space-y-1">
-                <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>SponsorBlock & Subtitles</span>
-                </div>
-                <p className="text-[11px] text-zinc-400 leading-tight">
-                  Automatically cuts sponsor segments and embeds multi-language captions.
-                </p>
+            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-xl flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-violet-500/10 text-violet-400 flex-shrink-0">
+                <Scissors className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white">SponsorBlock Removal</div>
+                <div className="text-[11px] text-zinc-400">Automatically bypasses sponsors, self-promo, and intros.</div>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-xl flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 flex-shrink-0">
+                <Activity className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white">Live Speed Telemetry</div>
+                <div className="text-[11px] text-zinc-400">Real-time ETA, transfer rate, and download progress.</div>
               </div>
             </div>
           </div>
-        ) : (
-          /* Live Interactive Engine Simulator */
-          <div className="p-6 sm:p-8 bg-zinc-950/95 space-y-6">
-            {/* Presets Row */}
-            <div className="space-y-2">
-              <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                Select a Test Platform to Simulate:
+        </div>
+      ) : (
+        /* Live Interactive Engine Simulator */
+        <div className="rounded-3xl bg-zinc-900/90 border border-zinc-800 p-6 sm:p-8 space-y-6 shadow-2xl shadow-black/80 backdrop-blur-2xl text-left">
+          {/* Presets Row */}
+          <div className="space-y-2">
+            <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+              Select a Test URL to Simulate:
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {PRESETS.map((preset) => (
+                <button
+                  key={preset.id}
+                  type="button"
+                  onClick={() => handleStartSim(preset)}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    selectedPreset.id === preset.id
+                      ? "bg-cyan-500/10 border-cyan-500/50 text-white shadow-md shadow-cyan-900/20"
+                      : "bg-zinc-900/70 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold">{preset.name}</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded border font-mono ${preset.badgeColor}`}>
+                      {preset.platform}
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-zinc-500 font-mono truncate mt-1">{preset.url}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Active Download Progress Card */}
+          <div className="p-5 rounded-2xl bg-zinc-950/80 border border-zinc-800/90 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-cyan-400">
+                  <Film className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-white">{selectedPreset.sampleTitle}</div>
+                  <div className="text-xs text-zinc-400 flex items-center gap-3">
+                    <span>Size: {selectedPreset.sampleSize}</span>
+                    <span>•</span>
+                    <span>Format: MP4 (H.264 + AAC)</span>
+                    <span>•</span>
+                    <span className="text-cyan-400 font-mono font-bold">Speed: {selectedPreset.sampleSpeed}</span>
+                  </div>
+                </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {PRESETS.map((preset) => (
-                  <button
-                    key={preset.id}
-                    type="button"
-                    onClick={() => handleStartSim(preset)}
-                    className={`p-3 rounded-xl border text-left transition-all ${
-                      selectedPreset.id === preset.id
-                        ? "bg-cyan-500/10 border-cyan-500/50 text-white shadow-md shadow-cyan-900/20"
-                        : "bg-zinc-900/70 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold">{preset.name}</span>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded border font-mono ${preset.badgeColor}`}>
-                        {preset.platform}
-                      </span>
-                    </div>
-                    <div className="text-[10px] text-zinc-500 font-mono truncate mt-1">{preset.url}</div>
-                  </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleStartSim(selectedPreset)}
+                  className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-200 flex items-center gap-1.5 transition-colors"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Re-Run</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Progress Meter */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-mono">
+                <span className="text-zinc-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                  {simProgress >= 100 ? "Post-Processing & Tag Embedding Complete" : "16-Chunk Aria2 Acceleration Active"}
+                </span>
+                <span className="text-cyan-400 font-bold">{Math.floor(simProgress)}%</span>
+              </div>
+              <div className="w-full h-2.5 rounded-full bg-zinc-800 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 transition-all duration-200"
+                  style={{ width: `${simProgress}%` }}
+                />
+              </div>
+            </div>
+
+            {/* 16 Parallel Aria2 Thread Visualization */}
+            <div className="pt-2 space-y-1.5">
+              <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+                <span>16x Concurrent TCP Streams</span>
+                <span>Saturating Maximum Bandwidth</span>
+              </div>
+              <div className="grid grid-cols-8 sm:grid-cols-16 gap-1">
+                {threads.map((val, idx) => (
+                  <div key={idx} className="h-4 rounded bg-zinc-800/80 overflow-hidden flex flex-col justify-end">
+                    <div
+                      className="bg-cyan-500/80 transition-all duration-300"
+                      style={{ height: simProgress >= 100 ? "100%" : `${val}%` }}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
-
-            {/* Active Download Progress Card */}
-            <div className="p-5 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-cyan-400">
-                    <Film className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-white">{selectedPreset.sampleTitle}</div>
-                    <div className="text-xs text-zinc-400 flex items-center gap-3">
-                      <span>Size: {selectedPreset.sampleSize}</span>
-                      <span>•</span>
-                      <span>Format: MP4 (H.264 + AAC)</span>
-                      <span>•</span>
-                      <span className="text-cyan-400 font-mono font-bold">Speed: {selectedPreset.sampleSpeed}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleStartSim(selectedPreset)}
-                    className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-200 flex items-center gap-1.5 transition-colors"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Re-Run</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Progress Meter */}
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-xs font-mono">
-                  <span className="text-zinc-400 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                    {simProgress >= 100 ? "Post-Processing & Tag Embedding Complete" : "16-Chunk Aria2 Acceleration Active"}
-                  </span>
-                  <span className="text-cyan-400 font-bold">{Math.floor(simProgress)}%</span>
-                </div>
-                <div className="w-full h-2.5 rounded-full bg-zinc-800 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 transition-all duration-200"
-                    style={{ width: `${simProgress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* 16 Parallel Aria2 Thread Visualization */}
-              <div className="pt-2 space-y-1.5">
-                <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
-                  <span>16x Concurrent TCP Streams</span>
-                  <span>Saturating Bandwidth</span>
-                </div>
-                <div className="grid grid-cols-8 sm:grid-cols-16 gap-1">
-                  {threads.map((val, idx) => (
-                    <div key={idx} className="h-4 rounded bg-zinc-800/80 overflow-hidden flex flex-col justify-end">
-                      <div
-                        className="bg-cyan-500/80 transition-all duration-300"
-                        style={{ height: simProgress >= 100 ? "100%" : `${val}%` }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }
