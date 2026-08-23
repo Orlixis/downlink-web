@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 const GITHUB_REPO = "https://github.com/Orlixis/downlink";
-const CURRENT_VERSION = "v0.1.63";
+const CURRENT_VERSION = "v0.1.64";
 
 export default function LandingPage() {
   const [detectedOs, setDetectedOs] = useState<"mac-arm" | "mac-intel" | "windows" | "linux">("mac-arm");
