@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import {
   SiYoutube,
   SiTiktok,
@@ -17,6 +19,10 @@ import {
   SiDailymotion,
   SiThreads,
 } from "react-icons/si";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP);
+}
 
 interface BrandItem {
   name: string;
@@ -41,27 +47,65 @@ const BRAND_ITEMS: BrandItem[] = [
 ];
 
 export function PlatformMarquee() {
-  return (
-    <section className="relative py-12 border-y border-white/[0.04] bg-white/[0.01] overflow-hidden select-none">
-      {/* Side Fade Masks */}
-      <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#09090b] to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#09090b] to-transparent z-10 pointer-events-none" />
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
 
-      <div className="max-w-6xl mx-auto px-6 mb-8 text-center">
+  useGSAP(
+    () => {
+      if (!trackRef.current) return;
+
+      // GSAP infinite linear scroll without layout thrashing
+      tweenRef.current = gsap.to(trackRef.current, {
+        xPercent: -50,
+        ease: "none",
+        duration: 32,
+        repeat: -1,
+      });
+    },
+    { scope: containerRef }
+  );
+
+  const handleMouseEnter = () => {
+    tweenRef.current?.pause();
+  };
+
+  const handleMouseLeave = () => {
+    tweenRef.current?.play();
+  };
+
+  return (
+    <section
+      ref={containerRef}
+      className="relative py-12 border-y border-white/[0.04] bg-white/[0.01] overflow-hidden select-none"
+    >
+      {/* Side Fade Masks for seamless optical edges */}
+      <div className="absolute left-0 top-0 bottom-0 w-36 bg-gradient-to-r from-[#09090b] via-[#09090b]/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-36 bg-gradient-to-l from-[#09090b] via-[#09090b]/80 to-transparent z-10 pointer-events-none" />
+
+      {/* Header Label */}
+      <div className="max-w-6xl mx-auto px-6 mb-8 text-center pointer-events-none">
         <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-zinc-500 flex items-center justify-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 opacity-80" />
           Seamless Extraction from 1,000+ Platforms &amp; Protocols
         </p>
       </div>
 
-      {/* Pure Smooth Hardware-Accelerated Marquee: Official React Icons + Brand Names */}
-      <div className="flex overflow-hidden">
-        {/* Track 1 */}
-        <div className="flex items-center gap-12 min-w-full shrink-0 animate-marquee hover:[animation-play-state:paused] will-change-transform pr-12">
+      {/* GSAP Hardware-Accelerated Ticker Track */}
+      <div
+        className="flex overflow-hidden cursor-default"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div
+          ref={trackRef}
+          className="flex items-center gap-12 shrink-0 will-change-transform"
+        >
+          {/* Set 1 */}
           {BRAND_ITEMS.map(({ name, Icon }, i) => (
             <div
-              key={`brand-1-${i}`}
-              className="flex items-center gap-2.5 text-zinc-400 hover:text-white transition-all duration-200 opacity-60 hover:opacity-100 cursor-default group shrink-0"
+              key={`brand-a-${i}`}
+              className="flex items-center gap-2.5 text-zinc-400 hover:text-white transition-colors duration-200 opacity-60 hover:opacity-100 shrink-0 pr-2"
               title={name}
             >
               <Icon className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
@@ -70,17 +114,12 @@ export function PlatformMarquee() {
               </span>
             </div>
           ))}
-        </div>
 
-        {/* Track 2 (Duplicate seamless loop) */}
-        <div
-          aria-hidden="true"
-          className="flex items-center gap-12 min-w-full shrink-0 animate-marquee hover:[animation-play-state:paused] will-change-transform pr-12"
-        >
+          {/* Set 2 (Exact Duplicate for seamless infinite loop) */}
           {BRAND_ITEMS.map(({ name, Icon }, i) => (
             <div
-              key={`brand-2-${i}`}
-              className="flex items-center gap-2.5 text-zinc-400 hover:text-white transition-all duration-200 opacity-60 hover:opacity-100 cursor-default group shrink-0"
+              key={`brand-b-${i}`}
+              className="flex items-center gap-2.5 text-zinc-400 hover:text-white transition-colors duration-200 opacity-60 hover:opacity-100 shrink-0 pr-2"
               title={name}
             >
               <Icon className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
