@@ -1,65 +1,146 @@
 "use client";
 
 import React from "react";
-import { motion } from "motion/react";
-import { Sparkles, Radio, ArrowUpRight } from "lucide-react";
 
-interface Platform {
+interface BrandLogo {
   name: string;
-  category: string;
-  badge: string;
+  svg: React.ReactNode;
 }
 
-const PLATFORMS: Platform[] = [
-  { name: "YouTube", category: "4K / 8K HDR", badge: "SponsorBlock" },
-  { name: "TikTok", category: "No Watermark", badge: "HD 60fps" },
-  { name: "Instagram", category: "Reels & Stories", badge: "Original Bitrate" },
-  { name: "X / Twitter", category: "Video & Audio", badge: "Max Res" },
-  { name: "Bilibili", category: "1080p60 Anime", badge: "FLAC Audio" },
-  { name: "BitTorrent", category: "Multi-Peer Magnet", badge: "16-Chunk Swarms" },
-  { name: "Twitch", category: "VODs & Clips", badge: "Source Quality" },
-  { name: "SoundCloud", category: "Lossless Audio", badge: "ID3 Metadata" },
-  { name: "Vimeo", category: "Pro 4K Videos", badge: "Direct Streams" },
-  { name: "Facebook", category: "HD Public Reels", badge: "AAC Muxed" },
-  { name: "Reddit", category: "Native Video", badge: "Audio Merged" },
+const BRAND_LOGOS: BrandLogo[] = [
+  {
+    name: "YouTube",
+    svg: (
+      <svg className="h-6 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+      </svg>
+    ),
+  },
+  {
+    name: "TikTok",
+    svg: (
+      <svg className="h-6 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Instagram",
+    svg: (
+      <svg className="h-6 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+      </svg>
+    ),
+  },
+  {
+    name: "X",
+    svg: (
+      <svg className="h-5 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Bilibili",
+    svg: (
+      <svg className="h-6 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M17.813 4.653h.854c1.51 0 2.769 1.233 2.769 2.758v10.446c0 1.504-1.239 2.754-2.769 2.754H5.333C3.824 20.611 2.6 19.36 2.6 17.857V7.411c0-1.525 1.244-2.758 2.733-2.758h.71l-1.63-1.63a.854.854 0 0 1 0-1.21.854.854 0 0 1 1.21 0l2.508 2.508a.853.853 0 0 1 .25.6h7.24a.853.853 0 0 1 .25-.6l2.508-2.508a.854.854 0 0 1 1.21 0 .854.854 0 0 1 0 1.21l-1.63 1.63zM5.333 6.363c-.58 0-1.023.463-1.023 1.048v10.446c0 .585.443 1.044 1.023 1.044h13.334c.58 0 1.059-.459 1.059-1.044V7.411c0-.585-.479-1.048-1.059-1.048H5.333zm3.178 4.733c.69 0 1.25.56 1.25 1.25s-.56 1.25-1.25 1.25-1.25-.56-1.25-1.25.56-1.25 1.25-1.25zm7 0c.69 0 1.25.56 1.25 1.25s-.56 1.25-1.25 1.25-1.25-.56-1.25-1.25.56-1.25 1.25-1.25z" />
+      </svg>
+    ),
+  },
+  {
+    name: "BitTorrent",
+    svg: (
+      <svg className="h-6 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm.5 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zm0 15a7.5 7.5 0 1 1 5.303-12.803l-1.414 1.414A5.5 5.5 0 1 0 12 17.5v2z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Twitch",
+    svg: (
+      <svg className="h-6 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
+      </svg>
+    ),
+  },
+  {
+    name: "SoundCloud",
+    svg: (
+      <svg className="h-5 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M1.175 12.225c-.04 0-.074.035-.078.077L.89 16.51c-.004.043.028.08.07.08h.27a.077.077 0 0 0 .077-.073l.25-4.218a.078.078 0 0 0-.077-.084h-.305zm1.186-.874a.077.077 0 0 0-.078.074l-.23 5.093c0 .043.033.078.076.078h.363a.078.078 0 0 0 .078-.073l.233-5.098a.078.078 0 0 0-.078-.083l-.442.009zm1.314-.492a.078.078 0 0 0-.078.075l-.2 5.584c0 .043.033.078.077.078h.423c.043 0 .078-.035.078-.078l.2-5.584a.078.078 0 0 0-.078-.078l-.522.003zm1.336-.334a.078.078 0 0 0-.078.076l-.166 5.922c0 .043.033.078.077.078h.455c.043 0 .078-.035.078-.078l.166-5.922a.078.078 0 0 0-.078-.078l-.554.002zm1.336-.084a.078.078 0 0 0-.078.077l-.133 6.006c0 .043.034.078.078.078h.469c.043 0 .078-.035.078-.078l.133-6.006a.078.078 0 0 0-.078-.078l-.568.001zm1.336-.208a.078.078 0 0 0-.078.077l-.1 6.214c0 .043.034.078.078.078h.478c.043 0 .078-.035.078-.078l.1-6.214a.078.078 0 0 0-.078-.078l-.578.001zm1.336-.459a.078.078 0 0 0-.078.077l-.066 6.673c0 .043.034.078.078.078h.486c.043 0 .078-.035.078-.078l.066-6.673a.078.078 0 0 0-.078-.078l-.586.001zm1.336-.395a.078.078 0 0 0-.078.077l-.033 7.068c0 .043.034.078.078.078h.493c.043 0 .078-.035.078-.078l.033-7.068a.078.078 0 0 0-.078-.078l-.593.001zm8.384-3.187c-.382 0-.75.068-1.096.191-.371-1.928-2.072-3.391-4.116-3.391-.453 0-.888.076-1.296.214a.08.08 0 0 0-.05.075v10.222a.08.08 0 0 0 .08.08h6.478c2.193 0 3.978-1.785 3.978-3.978 0-2.193-1.785-4.004-3.978-4.004z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Vimeo",
+    svg: (
+      <svg className="h-5 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.525 3.01 7.525c-.179 0-.806.378-1.881 1.131L0 7.197c1.185-1.044 2.351-2.084 3.501-3.128 1.573-1.378 2.748-2.112 3.526-2.203 1.839-.187 2.973.979 3.407 3.498.467 2.699.792 4.382.972 5.048.544 2.51 1.144 3.764 1.802 3.764.512 0 1.282-.816 2.311-2.449 1.026-1.633 1.579-2.871 1.657-3.714.137-1.393-.398-2.089-1.606-2.089-.575 0-1.171.131-1.79.395 1.185-3.881 3.447-5.759 6.786-5.631 2.476.094 3.652 1.637 3.432 4.63z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Facebook",
+    svg: (
+      <svg className="h-6 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Reddit",
+    svg: (
+      <svg className="h-6 w-auto fill-current" viewBox="0 0 24 24">
+        <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.197-2.512-.73a.326.326 0 0 0-.232-.095z" />
+      </svg>
+    ),
+  },
 ];
 
 export function PlatformMarquee() {
   return (
-    <section className="relative py-12 border-y border-white/[0.04] bg-white/[0.01] overflow-hidden select-none">
-      {/* Glow Vignette edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#07080a] to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#07080a] to-transparent z-10 pointer-events-none" />
+    <section className="relative py-10 border-y border-white/[0.04] bg-white/[0.01] overflow-hidden select-none">
+      {/* Side Fade Masks */}
+      <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#09090b] to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#09090b] to-transparent z-10 pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-6 mb-6 text-center">
-        <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-zinc-500 flex items-center justify-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-          Direct Stream Extraction from 1,000+ Media Sources
+      <div className="max-w-6xl mx-auto px-6 mb-7 text-center">
+        <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-zinc-500 flex items-center justify-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 opacity-80" />
+          Seamless Extraction from 1,000+ Platforms &amp; Protocols
         </p>
       </div>
 
-      {/* Infinite Horizontal Marquee Track */}
-      <div className="flex gap-4 w-max animate-marquee hover:[animation-play-state:paused]">
-        {[...PLATFORMS, ...PLATFORMS, ...PLATFORMS].map((p, idx) => (
-          <div
-            key={idx}
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.05] hover:border-cyan-500/30 transition-all backdrop-blur-md group"
-          >
-            <div className="space-y-0.5 text-left">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-zinc-200 group-hover:text-white transition-colors">
-                  {p.name}
-                </span>
-                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/[0.04] text-zinc-400 group-hover:text-cyan-300 border border-white/[0.05]">
-                  {p.badge}
-                </span>
-              </div>
-              <div className="text-[10px] text-zinc-500 font-mono group-hover:text-zinc-400">
-                {p.category}
-              </div>
+      {/* Pure Smooth Hardware-Accelerated Black & White Logo Marquee */}
+      <div className="flex overflow-hidden">
+        <div className="flex items-center gap-16 min-w-full shrink-0 animate-marquee hover:[animation-play-state:paused] will-change-transform">
+          {BRAND_LOGOS.map((brand, i) => (
+            <div
+              key={`logo-1-${i}`}
+              className="flex items-center justify-center text-zinc-500 hover:text-white transition-colors duration-300 opacity-40 hover:opacity-100 cursor-default"
+              title={brand.name}
+            >
+              {brand.svg}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Duplicate seamless track */}
+        <div
+          aria-hidden="true"
+          className="flex items-center gap-16 min-w-full shrink-0 animate-marquee hover:[animation-play-state:paused] will-change-transform"
+        >
+          {BRAND_LOGOS.map((brand, i) => (
+            <div
+              key={`logo-2-${i}`}
+              className="flex items-center justify-center text-zinc-500 hover:text-white transition-colors duration-300 opacity-40 hover:opacity-100 cursor-default"
+              title={brand.name}
+            >
+              {brand.svg}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
