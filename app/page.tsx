@@ -26,6 +26,19 @@ const CURRENT_VERSION = "v0.1.64";
 
 export default function LandingPage() {
   const [detectedOs, setDetectedOs] = useState<"mac-arm" | "mac-intel" | "windows" | "linux">("mac-arm");
+  const [releaseInfo, setReleaseInfo] = useState<{
+    version: string;
+    armDmg: string;
+    intelDmg: string;
+    winExe: string;
+    linuxAppImage: string;
+  }>({
+    version: CURRENT_VERSION,
+    armDmg: `${GITHUB_REPO}/releases/download/${CURRENT_VERSION}/Downlink_${CURRENT_VERSION.replace("v", "")}_aarch64.dmg`,
+    intelDmg: `${GITHUB_REPO}/releases/download/${CURRENT_VERSION}/Downlink_${CURRENT_VERSION.replace("v", "")}_x64.dmg`,
+    winExe: `${GITHUB_REPO}/releases/download/${CURRENT_VERSION}/Downlink_${CURRENT_VERSION.replace("v", "")}_x64-setup.exe`,
+    linuxAppImage: `${GITHUB_REPO}/releases/download/${CURRENT_VERSION}/downlink_${CURRENT_VERSION.replace("v", "")}_amd64.AppImage`,
+  });
 
   useEffect(() => {
     if (typeof navigator !== "undefined") {
@@ -38,30 +51,52 @@ export default function LandingPage() {
         setDetectedOs("mac-arm");
       }
     }
+
+    // Dynamic GitHub latest release synchronization
+    fetch("https://api.github.com/repos/Orlixis/downlink/releases/latest")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!data || !data.tag_name) return;
+        const tag = data.tag_name;
+        const clean = tag.replace(/^v/, "");
+        const arm = data.assets?.find((a: { name: string; browser_download_url: string }) => a.name.includes("aarch64.dmg"))?.browser_download_url;
+        const intel = data.assets?.find((a: { name: string; browser_download_url: string }) => a.name.includes("x64.dmg"))?.browser_download_url;
+        const exe = data.assets?.find((a: { name: string; browser_download_url: string }) => a.name.endsWith(".exe") || a.name.endsWith(".msi"))?.browser_download_url;
+        const appImg = data.assets?.find((a: { name: string; browser_download_url: string }) => a.name.endsWith(".AppImage"))?.browser_download_url;
+
+        setReleaseInfo({
+          version: tag,
+          armDmg: arm || `${GITHUB_REPO}/releases/download/${tag}/Downlink_${clean}_aarch64.dmg`,
+          intelDmg: intel || `${GITHUB_REPO}/releases/download/${tag}/Downlink_${clean}_x64.dmg`,
+          winExe: exe || `${GITHUB_REPO}/releases/download/${tag}/Downlink_${clean}_x64-setup.exe`,
+          linuxAppImage: appImg || `${GITHUB_REPO}/releases/download/${tag}/downlink_${clean}_amd64.AppImage`,
+        });
+      })
+      .catch(() => {});
   }, []);
 
   const getPrimaryDownload = () => {
     switch (detectedOs) {
       case "windows":
         return {
-          label: `Download for Windows (${CURRENT_VERSION})`,
+          label: `Download for Windows (${releaseInfo.version})`,
           subtext: "Windows 10 / 11 64-bit • .exe",
-          url: `${GITHUB_REPO}/releases/latest/download/Downlink_${CURRENT_VERSION.replace('v','')}_x64-setup.exe`,
+          url: releaseInfo.winExe,
           icon: Laptop,
         };
       case "linux":
         return {
-          label: `Download for Linux (${CURRENT_VERSION})`,
+          label: `Download for Linux (${releaseInfo.version})`,
           subtext: "x86_64 AppImage • Portable",
-          url: `${GITHUB_REPO}/releases/latest/download/downlink_${CURRENT_VERSION.replace('v','')}_amd64.AppImage`,
+          url: releaseInfo.linuxAppImage,
           icon: Terminal,
         };
       case "mac-arm":
       default:
         return {
-          label: `Download for macOS (${CURRENT_VERSION})`,
+          label: `Download for macOS (${releaseInfo.version})`,
           subtext: "Apple Silicon M1/M2/M3/M4 & Intel • .dmg",
-          url: `${GITHUB_REPO}/releases/latest/download/Downlink_${CURRENT_VERSION.replace('v','')}_aarch64.dmg`,
+          url: releaseInfo.armDmg,
           icon: Download,
         };
     }
@@ -86,7 +121,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-2">
               <span className="font-extrabold tracking-tight text-lg text-white">Downlink</span>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700/50">
-                {CURRENT_VERSION}
+                {releaseInfo.version}
               </span>
             </div>
           </Link>
@@ -222,7 +257,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <a
-            href={`${GITHUB_REPO}/releases/latest/download/Downlink_${CURRENT_VERSION.replace('v','')}_aarch64.dmg`}
+            href={releaseInfo.armDmg}
             className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-cyan-500/50 flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -236,7 +271,7 @@ export default function LandingPage() {
           </a>
 
           <a
-            href={`${GITHUB_REPO}/releases/latest/download/Downlink_${CURRENT_VERSION.replace('v','')}_x64.dmg`}
+            href={releaseInfo.intelDmg}
             className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-cyan-500/50 flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -250,7 +285,7 @@ export default function LandingPage() {
           </a>
 
           <a
-            href={`${GITHUB_REPO}/releases/latest/download/Downlink_${CURRENT_VERSION.replace('v','')}_x64-setup.exe`}
+            href={releaseInfo.winExe}
             className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-cyan-500/50 flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
@@ -264,7 +299,7 @@ export default function LandingPage() {
           </a>
 
           <a
-            href={`${GITHUB_REPO}/releases/latest/download/downlink_${CURRENT_VERSION.replace('v','')}_amd64.AppImage`}
+            href={releaseInfo.linuxAppImage}
             className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-cyan-500/50 flex items-center justify-between group transition-all"
           >
             <div className="flex items-center gap-3">
