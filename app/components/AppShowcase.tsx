@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
   CloudDownload,
   Clock,
@@ -21,13 +21,14 @@ import {
   Download,
   Settings,
   ClipboardPaste,
-  Check,
+  Sparkles,
 } from "lucide-react";
 
-interface MediaPreset {
+export interface MediaPreset {
   id: string;
   name: string;
   url: string;
+  patternLabel: string;
   platform: string;
   platformColor: string;
   title: string;
@@ -39,10 +40,11 @@ interface MediaPreset {
   targetBytes: number;
 }
 
-const PRESETS: MediaPreset[] = [
+export const SHOWCASE_PRESETS: MediaPreset[] = [
   {
     id: "yt",
     name: "YouTube 4K HDR",
+    patternLabel: "YOUTUBE 4K",
     url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     platform: "YouTube",
     platformColor: "text-red-400 bg-red-500/10 border-red-500/20",
@@ -57,6 +59,7 @@ const PRESETS: MediaPreset[] = [
   {
     id: "tiktok",
     name: "TikTok HD",
+    patternLabel: "TIKTOK HD",
     url: "https://www.tiktok.com/@perfected.praise4/video/7675215846851022111",
     platform: "TikTok",
     platformColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
@@ -71,6 +74,7 @@ const PRESETS: MediaPreset[] = [
   {
     id: "bilibili",
     name: "Bilibili 1080p60",
+    patternLabel: "BILIBILI 1080P",
     url: "https://www.bilibili.com/video/BV1xx411c7mD",
     platform: "Bilibili",
     platformColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
@@ -85,6 +89,7 @@ const PRESETS: MediaPreset[] = [
   {
     id: "torrent",
     name: "BitTorrent Swarm",
+    patternLabel: "BITTORRENT",
     url: "magnet:?xt=urn:btih:ubuntu-24.04-desktop-amd64.iso",
     platform: "Torrent",
     platformColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
@@ -98,8 +103,12 @@ const PRESETS: MediaPreset[] = [
   },
 ];
 
-export function AppShowcase() {
-  const [selectedPreset, setSelectedPreset] = useState<MediaPreset>(PRESETS[0]);
+interface AppShowcaseProps {
+  externalSelectedPreset?: MediaPreset | null;
+}
+
+export function AppShowcase({ externalSelectedPreset }: AppShowcaseProps) {
+  const [selectedPreset, setSelectedPreset] = useState<MediaPreset>(SHOWCASE_PRESETS[0]);
   const [urlInput, setUrlInput] = useState("");
   const [subtitlesEnabled, setSubtitlesEnabled] = useState(false);
   const [sponsorBlockEnabled, setSponsorBlockEnabled] = useState(false);
@@ -109,6 +118,13 @@ export function AppShowcase() {
   const [downloadProgress, setDownloadProgress] = useState(15.4);
   const [downloadSpeed, setDownloadSpeed] = useState(14.1);
   const [isSimulating, setIsSimulating] = useState(true);
+
+  // Sync external clicks from Marquee if passed
+  useEffect(() => {
+    if (externalSelectedPreset) {
+      handleSelectPreset(externalSelectedPreset);
+    }
+  }, [externalSelectedPreset]);
 
   // Live real-time download simulation loop
   useEffect(() => {
@@ -137,33 +153,10 @@ export function AppShowcase() {
     setActiveQueueTab("queue");
   };
 
-  const currentDownloaded = ((downloadProgress / 100) * selectedPreset.targetBytes).toFixed(1);
-
   return (
-    <section id="showcase" className="relative px-4 sm:px-6 max-w-6xl mx-auto pt-4 pb-28 space-y-8">
-      {/* Ambient Spotlight */}
+    <section id="showcase" className="relative px-4 sm:px-6 max-w-6xl mx-auto pt-0 pb-16 space-y-6">
+      {/* Ambient Spotlight Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[550px] bg-gradient-to-tr from-cyan-500/15 via-blue-600/10 to-transparent blur-[160px] pointer-events-none -z-10" />
-
-      {/* Preset Action Selector Pills */}
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        {PRESETS.map((preset) => (
-          <button
-            key={preset.id}
-            type="button"
-            onClick={() => handleSelectPreset(preset)}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-2 ${
-              selectedPreset.id === preset.id
-                ? "bg-white text-zinc-950 shadow-lg shadow-white/10 scale-105"
-                : "bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]"
-            }`}
-          >
-            <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${preset.platformColor}`}>
-              {preset.platform}
-            </span>
-            <span>{preset.name}</span>
-          </button>
-        ))}
-      </div>
 
       {/* ─── The Exact Native Desktop App Replica ────────────────────── */}
       <motion.div
@@ -202,7 +195,7 @@ export function AppShowcase() {
               <button
                 type="button"
                 onClick={() => handleSelectPreset(selectedPreset)}
-                className="flex h-6 w-6 items-center justify-center rounded text-zinc-500 hover:bg-zinc-800 hover:text-blue-400"
+                className="flex h-6 w-6 items-center justify-center rounded text-zinc-500 hover:bg-zinc-800 hover:text-blue-400 transition-colors"
                 title="Paste from clipboard (⌘V)"
               >
                 <ClipboardPaste className="h-3.5 w-3.5" />
@@ -214,7 +207,7 @@ export function AppShowcase() {
           <div className="pl-3 flex-shrink-0">
             <button
               type="button"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors"
             >
               <Settings className="h-4 w-4" />
             </button>
@@ -222,22 +215,18 @@ export function AppShowcase() {
         </div>
 
         {/* Exact 2-Panel Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-12 min-h-[500px] bg-[#121318]">
-          {/* ── Left Column: EmptyDropState or Preview (7 cols) ────────── */}
+        <div className="grid grid-cols-1 md:grid-cols-12 min-h-[510px] bg-[#121318]">
+          {/* ── Left Column: EmptyDropState (7 cols) ─────────────────── */}
           <div className="md:col-span-7 p-6 border-r border-zinc-800/80 flex flex-col justify-between space-y-4">
-            {/* EmptyDropState view matching production desktop app */}
             <div className="flex flex-col items-center text-center my-auto px-4 w-full max-w-md mx-auto">
               {/* Floating icon with animated pull-down arrows */}
               <div className="relative mb-8 mt-2">
-                {/* Ambient glow */}
                 <div className="absolute inset-0 blur-2xl opacity-40 rounded-full bg-gradient-to-br from-blue-500/50 to-cyan-500/30 scale-150" />
 
-                {/* Icon container */}
                 <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600/20 to-cyan-500/10 ring-1 ring-white/10 shadow-xl">
                   <CloudDownload className="h-10 w-10 text-blue-400" />
                 </div>
 
-                {/* Staggered chevron arrows pulling downward */}
                 <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5">
                   {[0, 1, 2].map((i) => (
                     <div key={i} className="animate-pulse" style={{ animationDelay: `${i * 200}ms` }}>
@@ -270,34 +259,40 @@ export function AppShowcase() {
               </p>
 
               {/* Keyboard hint */}
-              <div className="mb-7 flex items-center gap-2 text-zinc-500">
+              <div className="mb-6 flex items-center gap-2 text-zinc-500">
                 <kbd className="inline-flex items-center rounded-md border border-zinc-700 bg-zinc-800/80 px-2 py-1 text-xs font-medium text-zinc-300 shadow-sm font-mono">
                   ⌘V
                 </kbd>
                 <span className="text-xs">to paste from clipboard</span>
               </div>
 
-              {/* Ghost example URLs */}
-              <div className="w-full space-y-2">
-                <p className="mb-2 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold text-left">
-                  EXAMPLE PATTERNS
-                </p>
-                {[
-                  { label: "SINGLE VIDEO", url: "youtube.com/watch?v=…" },
-                  { label: "EPISODE RANGE", url: "site.com/episode-[1-24]" },
-                  { label: "PLAYLIST", url: "youtube.com/playlist?list=…" },
-                ].map(({ label, url }) => (
-                  <div
-                    key={url}
-                    className="flex items-center gap-2.5 rounded-lg border border-zinc-800/80 bg-zinc-900/40 px-3 py-2 text-left"
+              {/* Interactive In-App Example Patterns (Solution 1) */}
+              <div className="w-full space-y-1.5">
+                <div className="flex items-center justify-between pb-1 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">
+                  <span>EXAMPLE PATTERNS</span>
+                  <span className="text-cyan-400/80 lowercase text-[10px] font-normal flex items-center gap-1">
+                    <Sparkles className="w-2.5 h-2.5" /> click to test
+                  </span>
+                </div>
+                {SHOWCASE_PRESETS.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => handleSelectPreset(preset)}
+                    className={`w-full flex items-center gap-2.5 rounded-lg border px-3 py-2 text-left transition-all group ${
+                      selectedPreset.id === preset.id && urlInput === preset.url
+                        ? "border-cyan-500/40 bg-cyan-500/10 shadow-sm ring-1 ring-cyan-500/20"
+                        : "border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-800/60 hover:border-zinc-700/80"
+                    }`}
                   >
-                    <span className="min-w-[85px] text-[10px] font-medium text-zinc-500 uppercase tracking-wide font-mono">
-                      {label}
+                    <span className="min-w-[90px] text-[10px] font-bold text-zinc-400 group-hover:text-white uppercase tracking-wide font-mono flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 opacity-60 group-hover:opacity-100" />
+                      {preset.patternLabel}
                     </span>
-                    <span className="flex-1 truncate font-mono text-[11px] text-zinc-500">
-                      {url}
+                    <span className="flex-1 truncate font-mono text-[11px] text-zinc-500 group-hover:text-zinc-300">
+                      {preset.url}
                     </span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -422,7 +417,6 @@ export function AppShowcase() {
                   <div className="rounded-xl border border-zinc-800 bg-zinc-900/90 p-3 space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-start gap-2.5 min-w-0">
-                        {/* Thumbnail */}
                         <div className="relative w-14 h-9 flex-shrink-0 rounded-lg overflow-hidden bg-black border border-white/10">
                           <img
                             src={selectedPreset.thumbnail}
@@ -450,7 +444,6 @@ export function AppShowcase() {
                         </div>
                       </div>
 
-                      {/* Action buttons top right */}
                       <div className="flex items-center gap-1 text-zinc-500">
                         <button type="button" className="p-1 hover:text-zinc-300">
                           <Pause className="h-3 w-3" />
@@ -464,12 +457,10 @@ export function AppShowcase() {
                       </div>
                     </div>
 
-                    {/* Telemetry info */}
                     <div className="flex justify-between text-[10px] font-mono text-zinc-400 px-0.5">
                       <span>{downloadSpeed} MB/s &nbsp; 14s left</span>
                     </div>
 
-                    {/* Glowing Progress bar */}
                     <div className="w-full h-1.5 rounded-full bg-zinc-800 overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-200"
@@ -569,7 +560,7 @@ export function AppShowcase() {
                 <div className="space-y-2">
                   <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2 truncate">
-                      <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
                       <span className="text-zinc-300 truncate">Rick Astley - Never Gonna Give You Up (4K)</span>
                     </div>
                     <span className="text-[10px] font-mono text-zinc-500">229.2 MB</span>

@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Download, Smartphone, ArrowRight, ShieldCheck, Zap, Layers } from "lucide-react";
+import { Download, Smartphone, ArrowRight } from "lucide-react";
 
 export interface ReleaseInfo {
   version: string;
@@ -52,7 +52,7 @@ export function HeroSection({ detectedOs, releaseInfo }: HeroSectionProps) {
   const primary = getPrimaryDownload();
 
   return (
-    <section className="relative pt-20 pb-16 px-6 max-w-5xl mx-auto text-center space-y-8">
+    <section className="relative pt-20 pb-8 px-6 max-w-5xl mx-auto text-center space-y-8">
       {/* Release Tag Pill */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -86,7 +86,7 @@ export function HeroSection({ detectedOs, releaseInfo }: HeroSectionProps) {
         </p>
       </motion.div>
 
-      {/* Primary Action Button (Zed / Cursor Single Dominant CTA) */}
+      {/* Primary Action Button */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -117,27 +117,6 @@ export function HeroSection({ detectedOs, releaseInfo }: HeroSectionProps) {
           <a href="#downloads" className="hover:text-zinc-300 underline underline-offset-2 transition-colors">
             Other platforms &amp; CLI ↓
           </a>
-        </div>
-      </motion.div>
-
-      {/* Reassurance Metrics */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        className="pt-4 flex flex-wrap items-center justify-center gap-8 text-xs text-zinc-500"
-      >
-        <div className="flex items-center gap-2">
-          <Zap className="w-3.5 h-3.5 text-cyan-400" />
-          <span>16x Aria2 Acceleration</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-          <span>100% Free &amp; MIT Licensed</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Layers className="w-3.5 h-3.5 text-blue-400" />
-          <span>1,000+ Video Extractors</span>
         </div>
       </motion.div>
     </section>

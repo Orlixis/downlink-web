@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Navbar } from "./components/Navbar";
 import { HeroSection, type ReleaseInfo } from "./components/HeroSection";
 import { AppShowcase } from "./components/AppShowcase";
+import { PlatformMarquee } from "./components/PlatformMarquee";
 import { ContinuitySection } from "./components/ContinuitySection";
 import { FeatureGrid } from "./components/FeatureGrid";
 import { ComparisonTable } from "./components/ComparisonTable";
@@ -81,14 +82,15 @@ export default function LandingPage() {
       <Navbar version={releaseInfo.version} githubUrl={GITHUB_REPO} />
 
       {/* Main Content Sections */}
-      <main className="space-y-4">
+      <main className="space-y-6">
         <HeroSection
           detectedOs={detectedOs}
           releaseInfo={releaseInfo}
-          
         />
 
         <AppShowcase />
+
+        <PlatformMarquee />
 
         <FeatureGrid />
 
