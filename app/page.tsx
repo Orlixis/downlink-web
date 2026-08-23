@@ -69,11 +69,13 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#09090b] text-zinc-100 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="relative min-h-screen bg-[#09090b] text-zinc-100 selection:bg-cyan-500/30 selection:text-cyan-200">
       {/* Dynamic Ambient Background Glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-gradient-to-b from-cyan-500/15 via-blue-600/10 to-transparent blur-[160px] pointer-events-none -z-10" />
-      <div className="absolute top-[1600px] right-[-200px] w-[600px] h-[600px] bg-gradient-to-b from-purple-500/10 via-blue-600/5 to-transparent blur-[160px] pointer-events-none -z-10" />
-      <div className="absolute top-[3200px] left-[-200px] w-[600px] h-[600px] bg-gradient-to-b from-cyan-500/10 via-teal-600/5 to-transparent blur-[160px] pointer-events-none -z-10" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-gradient-to-b from-cyan-500/15 via-blue-600/10 to-transparent blur-[160px]" />
+        <div className="absolute top-[1600px] right-[-200px] w-[600px] h-[600px] bg-gradient-to-b from-purple-500/10 via-blue-600/5 to-transparent blur-[160px]" />
+        <div className="absolute top-[3200px] left-[-200px] w-[600px] h-[600px] bg-gradient-to-b from-cyan-500/10 via-teal-600/5 to-transparent blur-[160px]" />
+      </div>
 
       {/* Navigation */}
       <Navbar version={releaseInfo.version} githubUrl={GITHUB_REPO} />
