@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, MessageSquare } from "lucide-react";
 
 interface FaqItem {
   question: string;
@@ -13,7 +13,7 @@ const FAQS: FaqItem[] = [
   {
     question: "How does 16x multi-threading work?",
     answer:
-      "Downlink embeds an optimized Aria2 engine that establishes up to 16 parallel TCP connections to remote media servers. By pulling different byte segments simultaneously, it saturates your bandwidth and prevents single-stream throttling.",
+      "Downlink embeds an optimized Aria2 engine that establishes up to 16 parallel TCP connections to remote media servers. By pulling different byte segments simultaneously, it saturates your bandwidth and prevents single-stream host throttling.",
   },
   {
     question: "How does the Mobile Companion connect to my desktop?",
@@ -30,6 +30,11 @@ const FAQS: FaqItem[] = [
     answer:
       "Downlink automatically checks for extractor engine updates in the background. When video platforms make player changes, you can update with a single click inside Settings → Updates with zero terminal commands.",
   },
+  {
+    question: "Does Downlink support 4K and 8K HDR video?",
+    answer:
+      "Yes. Downlink automatically inspects available video streams and selects the highest resolution (including 4K 2160p, 8K 4320p, 60fps, and HDR) along with the highest-bitrate audio track, multiplexing them into a single high-quality MP4/MKV container via FFmpeg.",
+  },
 ];
 
 export function FaqSection() {
@@ -40,13 +45,27 @@ export function FaqSection() {
   };
 
   return (
-    <section id="faq" className="py-28 px-6 max-w-3xl mx-auto space-y-12">
-      <div className="text-center space-y-3">
-        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-white">
-          Frequently Asked Questions
+    <section id="faq" className="py-24 px-6 max-w-3xl mx-auto space-y-14">
+      {/* Section Header with Consistent Eyebrow */}
+      <div className="text-center space-y-4 max-w-2xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[11px] font-mono uppercase tracking-widest text-cyan-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+          Got Questions?
+        </div>
+
+        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-[-0.035em] text-white leading-tight">
+          Frequently asked <br />
+          <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-teal-300 bg-clip-text text-transparent">
+            questions.
+          </span>
         </h2>
+
+        <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-normal">
+          Everything you need to know about Downlink&apos;s engine, privacy, and companion apps.
+        </p>
       </div>
 
+      {/* Accordion List */}
       <div className="space-y-3">
         {FAQS.map((faq, idx) => {
           const isOpen = openIndex === idx;
@@ -55,16 +74,16 @@ export function FaqSection() {
               key={idx}
               className={`rounded-2xl border transition-all overflow-hidden ${
                 isOpen
-                  ? "bg-white/[0.04] border-white/[0.12]"
-                  : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.1]"
+                  ? "bg-white/[0.04] border-cyan-500/30 shadow-lg shadow-cyan-500/5"
+                  : "bg-white/[0.02] border-white/[0.06] hover:border-white/[0.12]"
               }`}
             >
               <button
                 type="button"
                 onClick={() => toggle(idx)}
-                className="w-full p-5 text-left flex items-center justify-between gap-4 focus:outline-none"
+                className="w-full p-5 text-left flex items-center justify-between gap-4 focus:outline-none cursor-pointer"
               >
-                <span className="text-sm font-semibold text-zinc-200">{faq.question}</span>
+                <span className="text-sm sm:text-base font-semibold text-zinc-200">{faq.question}</span>
                 <ChevronDown
                   className={`w-4 h-4 text-zinc-400 transition-transform duration-200 flex-shrink-0 ${
                     isOpen ? "rotate-180 text-cyan-400" : ""
@@ -88,6 +107,19 @@ export function FaqSection() {
             </div>
           );
         })}
+      </div>
+
+      {/* Community Link */}
+      <div className="text-center pt-2">
+        <a
+          href="https://github.com/Orlixis/downlink/issues"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-cyan-300 transition-colors"
+        >
+          <MessageSquare className="w-3.5 h-3.5" />
+          <span>Have a question not answered here? Open an issue on GitHub →</span>
+        </a>
       </div>
     </section>
   );

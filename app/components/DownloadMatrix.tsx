@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { Download, Laptop, Terminal, ArrowRight, Copy, Check } from "lucide-react";
+import { Download, Laptop, Terminal, ArrowRight, Copy, Check, Apple } from "lucide-react";
 import type { ReleaseInfo } from "./HeroSection";
 
 interface DownloadMatrixProps {
@@ -11,14 +11,13 @@ interface DownloadMatrixProps {
 }
 
 export function DownloadMatrix({ releaseInfo, githubUrl }: DownloadMatrixProps) {
-  const [copied, setCopied] = useState(false);
+  const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
   const cleanVersion = releaseInfo.version.replace(/^v/, "");
-  const brewCmd = "brew install --cask orlixis/tap/downlink";
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(brewCmd);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyCommand = (cmd: string) => {
+    navigator.clipboard.writeText(cmd);
+    setCopiedCmd(cmd);
+    setTimeout(() => setCopiedCmd(null), 2000);
   };
 
   const platforms = [
@@ -27,7 +26,7 @@ export function DownloadMatrix({ releaseInfo, githubUrl }: DownloadMatrixProps) 
       arch: "M1 / M2 / M3 / M4",
       filename: `Downlink_${cleanVersion}_aarch64.dmg`,
       url: releaseInfo.armDmg,
-      icon: Download,
+      icon: Apple,
       accent: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
     },
     {
@@ -35,7 +34,7 @@ export function DownloadMatrix({ releaseInfo, githubUrl }: DownloadMatrixProps) 
       arch: "x86_64",
       filename: `Downlink_${cleanVersion}_x64.dmg`,
       url: releaseInfo.intelDmg,
-      icon: Download,
+      icon: Apple,
       accent: "text-blue-400 bg-blue-500/10 border-blue-500/20",
     },
     {
@@ -56,15 +55,29 @@ export function DownloadMatrix({ releaseInfo, githubUrl }: DownloadMatrixProps) 
     },
   ];
 
+  const cliCommands = [
+    { label: "Homebrew (macOS)", cmd: "brew install --cask orlixis/tap/downlink" },
+    { label: "WinGet (Windows)", cmd: "winget install Orlixis.Downlink" },
+  ];
+
   return (
-    <section id="downloads" className="py-28 px-6 max-w-5xl mx-auto space-y-16">
-      {/* Section Header */}
-      <div className="text-center space-y-3 max-w-2xl mx-auto">
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-[-0.03em] text-white">
-          Download Downlink
+    <section id="downloads" className="py-24 px-6 max-w-5xl mx-auto space-y-14">
+      {/* Section Header with Consistent Eyebrow */}
+      <div className="text-center space-y-4 max-w-2xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[11px] font-mono uppercase tracking-widest text-cyan-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+          Native Desktop Builds
+        </div>
+
+        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-[-0.035em] text-white leading-tight">
+          Ready for your <br />
+          <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-teal-300 bg-clip-text text-transparent">
+            operating system.
+          </span>
         </h2>
-        <p className="text-sm sm:text-base text-zinc-400">
-          Native standalone binaries for all desktop architectures. Version <code className="text-cyan-400 font-mono">{releaseInfo.version}</code>.
+
+        <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-normal">
+          Direct standalone installers compiled for Apple Silicon, Intel x86, Windows, and Linux. Version <code className="text-cyan-400 font-mono">{releaseInfo.version}</code>.
         </p>
       </div>
 
@@ -99,17 +112,27 @@ export function DownloadMatrix({ releaseInfo, githubUrl }: DownloadMatrixProps) 
         ))}
       </div>
 
-      {/* Homebrew Terminal Command Box */}
-      <div className="max-w-md mx-auto p-3 rounded-2xl bg-zinc-950/80 border border-white/[0.08] backdrop-blur-xl flex items-center justify-between">
-        <code className="text-xs font-mono text-zinc-300 pl-2">{brewCmd}</code>
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-colors"
-          title="Copy Homebrew command"
-        >
-          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-        </button>
+      {/* CLI Package Manager Install Commands */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+        {cliCommands.map((item, idx) => (
+          <div
+            key={idx}
+            className="p-3.5 rounded-2xl bg-zinc-950/80 border border-white/[0.08] backdrop-blur-xl flex items-center justify-between gap-3 text-left"
+          >
+            <div className="min-w-0">
+              <div className="text-[10px] font-mono text-zinc-500 uppercase">{item.label}</div>
+              <code className="text-xs font-mono text-zinc-300 truncate block mt-0.5">{item.cmd}</code>
+            </div>
+            <button
+              type="button"
+              onClick={() => copyCommand(item.cmd)}
+              className="p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-colors flex-shrink-0"
+              title="Copy command"
+            >
+              {copiedCmd === item.cmd ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            </button>
+          </div>
+        ))}
       </div>
     </section>
   );
